@@ -1,18 +1,20 @@
 defmodule ExsDB do
-  @moduledoc """
-  Documentation for ExsDB.
-  """
+  @defaults %{port: 9999}
 
   @doc """
-  Hello world.
+  Starts db. You can pass params which can replace defaults.
 
   ## Examples
 
-      iex> ExsDB.hello()
-      :world
+      iex> ExsDB.start()
+      {:ok, 9999}
+
+      iex> ExsDB.start(%{port: 7777})
+      {:ok, 7777}
 
   """
-  def hello do
-    :world
+  def start(params \\ %{}) do
+    %{port: port} = Map.merge(@defaults, params)
+    {:ok, port}
   end
 end
