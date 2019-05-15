@@ -1,20 +1,16 @@
 defmodule ExsDB do
-  @defaults %{port: 9999}
+  use Application
 
-  @doc """
-  Starts db. You can pass params which can replace defaults.
+  require Logger
 
-  ## Examples
+  def start(_type, _args) do
+    Logger.debug("App started!")
+    # IO.puts "App started!"
+    StorageSupervisor.start_link(name: StorageSupervisor)
+  end
 
-      iex> ExsDB.start()
-      {:ok, 9999}
-
-      iex> ExsDB.start(%{port: 7777})
-      {:ok, 7777}
-
-  """
-  def start(params \\ %{}) do
-    %{port: port} = Map.merge(@defaults, params)
-    {:ok, port}
+  def stop(_state) do
+    Logger.error("App stoped!")
+    # IO.puts "App stoped!"
   end
 end
