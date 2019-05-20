@@ -7,6 +7,7 @@ defmodule ExsDB do
     Logger.debug("App started!")
     # IO.puts "App started!"
     StorageSupervisor.start_link(name: StorageSupervisor)
+    Tables.TablesSupervisor.start_link(name: TablesSupervisor)
   end
 
   def stop(_state) do
