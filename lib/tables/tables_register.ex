@@ -47,10 +47,7 @@ defmodule Tables.TablesRegister do
       Logger.debug("Worker for table '#{table_name}' already exists")
       {:reply, {:error, "Worker for table '#{table_name}' already exists"}, {workers, refs}}
     else
-      # {:ok, worker} = Tables.TableWorker.start_link(table_name, [])
-      # %{id: Tables.TablesRegister, start: {Tables.TablesRegister, :start_link, [["table1", "table2"], [name: TablesRegister]]}},
       {:ok, worker} = DynamicSupervisor.start_child(Tables.WorkersSupervisor, %{id: Tables.TableWorker, start: {Tables.TableWorker, :start_link, [table_name, []]}})
-      # {:ok, worker} = DynamicSupervisor.start_child(Tables.WorkersSupervisor, {Tables.TableWorker, [table_name]})
       ref = Process.monitor(worker)
       workers = Map.put(workers, table_name, worker)
       refs = Map.put(refs, table_name, ref)
@@ -58,17 +55,15 @@ defmodule Tables.TablesRegister do
     end
   end
 
-  def handle_info({:DOWN, ref, :process, _pid, reason}, {workers, refs}) do
+  def handle_info({:DOWN, ref, :process, _pid, _reason}, {workers, refs}) do
     {table_name, refs} = Map.pop(refs, ref)
-    Logger.debug("reason: #{reason}")
     Logger.debug("Removing worker #{table_name} from reigster")
     workers = Map.delete(workers, table_name)
     {:noreply, {workers, refs}}
   end
 
-  def handle_info({x, ref, :process, pid, reason}, {workers, refs}) do
-    {:ok, table_name} = Map.fetch(refs, ref)
-    Logger.debug("Received unknown msg {#{x}, #{pid}, #{reason}} for worker #{table_name} in TableRegister")
-    {:noreply, {workers, refs}}
+  def handle_info(msg, state) do
+    Logger.debug("Received unknown msg in TableRegister")
+    {:noreply, state}
   end
 end
