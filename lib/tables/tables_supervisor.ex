@@ -7,7 +7,10 @@ defmodule Tables.TablesSupervisor do
 
   def init(:ok) do
       children = [
-        worker(Tables.TablesRegister, [["table1", "table2"], [name: TablesRegister]])
+        # %{id: Tables.WorkersSupervisor, start: {DynamicSupervisor, :start_link, [name: Tables.WorkersSupervisor, strategy: :one_for_one]}},
+        {DynamicSupervisor, name: Tables.WorkersSupervisor, strategy: :one_for_one},
+        %{id: Tables.TablesRegister, start: {Tables.TablesRegister, :start_link, [["table1", "table2"], [name: TablesRegister]]}}
+        # worker(Tables.TablesRegister, [["table1", "table2"], [name: TablesRegister]]),
         # worker(Tables.TablesRegister, [["table1", "table2"], name: TablesRegister])
         # %{
         #   id: Tables.TablesRegister,

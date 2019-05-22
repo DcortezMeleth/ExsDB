@@ -1,12 +1,13 @@
 defmodule Tables.TablesRegisterTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
 
   doctest Tables.TablesRegister
 
-  setup do
-    registry = start_supervised!(Tables.TablesRegister, [start: {Tables.TablesRegister, :start_link, [["table1", "table2"], [name: TablesRegister]]}])
-    %{registry: registry}
-  end
+  # setup do
+  #   start_supervised!(Tables.TablesSupervisor)
+  #   # start_supervised!(Tables.TablesRegister, [start: {Tables.TablesRegister, :start_link, [["table1", "table2"], [name: TablesRegister]]}])
+  #   %{}
+  # end
 
   test "should add worker for table" do
     assert Tables.TablesRegister.lookup("table3") == {:error, "Worker for table 'table3' does not exist"}
@@ -17,15 +18,6 @@ defmodule Tables.TablesRegisterTest do
     assert result == :ok
   end
 
-  # test "should delete worker for table" do
-  #   {result, _} = Tables.TablesRegister.lookup("table2")
-  #   assert result == :ok
-
-  #   assert Tables.TablesRegister.delete("table2") == :ok
-
-  #   assert Tables.TablesRegister.lookup("table2") == {:error, "Worker for table 'table2' does not exist"}
-  # end
-
   test "should delete worker from register after stoping it" do
     {result, worker} = Tables.TablesRegister.lookup("table1")
     assert result == :ok
@@ -33,5 +25,15 @@ defmodule Tables.TablesRegisterTest do
     GenServer.stop(worker)
 
     assert Tables.TablesRegister.lookup("table1") == {:error, "Worker for table 'table1' does not exist"}
+  end
+
+  test "should no crash after crash of worker" do
+    {result, worker} = Tables.TablesRegister.lookup("table2")
+    assert result == :ok
+
+    GenServer.stop(worker, :error)
+
+    {result, worker} = Tables.TablesRegister.lookup("table2")
+    assert result == :ok
   end
 end
