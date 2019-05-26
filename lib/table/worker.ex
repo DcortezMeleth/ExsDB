@@ -13,6 +13,10 @@ defmodule Table.Worker do
     GenServer.call(via_touple(table_name), :get_name)
   end
 
+  def delete(table_name) do
+    GenServer.stop(via_touple(table_name))
+  end
+
   defp via_touple(name) do
     {:via, :gproc, {:n, :l ,{:table_worker, name}}}
   end
