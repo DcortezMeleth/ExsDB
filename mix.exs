@@ -23,7 +23,7 @@ defmodule ExsDB.MixProject do
   defp deps do
     [
       {:ex_parameterized, "~>1.3.6"},
-      {:gproc, "~>0.8.0"}
+      # {:gproc, "~>0.8.0"}
       # {:dep_from_hexpm, "~> 0.3.0"},
       # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
     ]

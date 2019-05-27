@@ -18,7 +18,7 @@ defmodule Table.Worker do
   end
 
   defp via_touple(name) do
-    {:via, :gproc, {:n, :l ,{:table_worker, name}}}
+    {:via, Registry, {Table.Registery, name}}
   end
 
   # Server callbacks
