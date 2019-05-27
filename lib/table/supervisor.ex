@@ -5,8 +5,8 @@ defmodule Table.Supervisor do
     DynamicSupervisor.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
-  def create_table(table_name) do
-    spec = %{id: Table.Worker, restart: :transient, start: {Table.Worker, :start_link, [table_name]}}
+  def create_table(table_name, columns) do
+    spec = %{id: Table.Worker, restart: :transient, start: {Table.Worker, :start_link, [table_name, columns]}}
     DynamicSupervisor.start_child(__MODULE__, spec)
   end
 
