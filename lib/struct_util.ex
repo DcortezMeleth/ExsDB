@@ -1,5 +1,5 @@
 defmodule StructUtil do
-  def get_tables() do
+  def get_tables("hades") do
     %{
       "Users" => [
         {"id", :int, :primary_key},
@@ -21,4 +21,5 @@ defmodule StructUtil do
       ]
     }
   end
+  def get_tables(_), do: []
 end

@@ -5,12 +5,12 @@ defmodule StructUtilTest do
   doctest StructUtil
 
   test "Should return 3 tables" do
-    assert StructUtil.get_tables() |> Kernel.map_size() == 3
+    assert StructUtil.get_tables("hades") |> Kernel.map_size() == 3
   end
 
   test_with_params "Should return correct columns",
                    fn table_name, expected_columns ->
-                     assert StructUtil.get_tables |> Map.fetch!(table_name) == expected_columns
+                     assert "hades" |> StructUtil.get_tables |> Map.fetch!(table_name) == expected_columns
                    end do
     [
       {"Users", [

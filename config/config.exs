@@ -32,3 +32,5 @@ use Mix.Config
 config :logger, :console,
   format: "\n$time $metadata[$level] $levelpad$message\n",
   metadata: [:user_id]
+
+config :exsdb, db_name: "hades"
